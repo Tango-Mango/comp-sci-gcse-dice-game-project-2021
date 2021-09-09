@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="Images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="Images/favicon-16x16.png" sizes="16x16" />
+    <script src="https://use.fontawesome.com/ac222373d8.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script.js" async></script>
+</head>
+
+<body class="body3">
+
+    <section>
+
+        <header>
+            <h1 id="round">Round 1</h1>
+        </header>
+
+        <div class="players">
+            <h2 id="p1">Player 1: 0 total points</h2>
+            <h1>VS</h1>
+            <h2 id="p2">Player 2: 0 total points</h2>
+        </div>
+
+        <div class="stage">
+
+            <div><img src="" id="firstDice"></div>
+
+            <div class="board">
+                <div class="result"></div>
+                <div class="player1result" id="rollresult"></div>
+                <button type="button" onclick="roll()">Roll!</button>
+            </div>
+
+            <div><img src="" id="secondDice"></div>
+
+        </div>
+
+    </section>
+
+    
+</body>
+
+</html>
