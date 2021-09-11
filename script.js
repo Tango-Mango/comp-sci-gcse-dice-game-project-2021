@@ -207,6 +207,7 @@ roll = () => {
     p_2.transition = "all 0.5s";
     p_1.innerHTML = "Player 1: " + player1score + " total points";
     alert("Player 1 wins!");
+    window.location.replace("leaderboard.html");
   } else if (currentround === 5 && (player1score < player2score)) {
     result.innerHTML = 'Player 2 wins!';
     p_2.style.color="#9C060C";
@@ -215,6 +216,7 @@ roll = () => {
     p_1.transition = "all 0.5s";
     p_2.innerHTML = "Player 2: " + player2score + " total points";
     alert("Player 2 wins!");
+    window.location.replace("leaderboard.html");
   }else if (player1turn === true && player2turn === false) {
     player1roll();
     p_1.style.color="#9C060C";
