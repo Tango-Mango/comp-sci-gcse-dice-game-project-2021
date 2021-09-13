@@ -54,9 +54,41 @@ $(validate2 = form => {
   return true;
 });
 
+
+const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+const MAX_HIGH_SCORES = 5;
+
+$(detailSubmit1 = form => {
+  if (form.winner.value !== "") {
+    const score = {
+      name: form.winner.value,
+      score: sessionStorage.getItem("p1score"),
+    };
+    highScores.push(score);
+    highScores.sort((a, b) => b.score - a.score);
+    highScores.splice(5);
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    window.location.replace("leaderboard.html");
+  }
+});
+
+$(detailSubmit2 = form => {
+  if (form.winner.value !== "") {
+    const score = {
+      name: form.winner.value,
+      score: sessionStorage.getItem("p2score"),
+    };
+    highScores.push(score);
+    highScores.sort((a, b) => b.score - a.score);
+    highScores.splice(5);
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    window.location.replace("leaderboard.html");
+  }
+});
+
 let CensorStatus = false;
 
-Censor = () => {
+const Censor = () => {
   if (CensorStatus) {
     document.getElementById("password").setAttribute("type", "password");
     CensorStatus = false;
@@ -68,8 +100,8 @@ Censor = () => {
 
 //Dice Game Code
 
-let player1score = 0;
-let player2score = 0;
+var player1score = 0;
+var player2score = 0;
 const result = document.querySelector('.result');
 const p_1=document.querySelector('#p1');
 const p_2=document.querySelector('#p2');
@@ -81,8 +113,13 @@ let player1turn = true;
 let player2turn = false;
 let player_1total = 0;
 let player_2total = 0;
+let player1turns = 1;
+let player2turns = 1;
+let currentround = 1;
+var winnerp1 = false;
+var winnerp2 = false;
 
-player1roll = () => {
+const player1roll = () => {
   const player_1 = Math.floor(Math.random() * 6) + 1;
   const player_12 = Math.floor(Math.random() * 6) + 1;
   result.innerHTML = "Player 1 Turn";
@@ -102,7 +139,7 @@ player1roll = () => {
     document.getElementById("rollresult").innerHTML = "Even Total! +10 extra points!";
   }
 }
-player2roll = () => {
+const player2roll = () => {
   const player_2 = Math.floor(Math.random() * 6) + 1;
   const player_22 = Math.floor(Math.random() * 6) + 1;
   result.innerHTML = "Player 2 Turn";
@@ -123,7 +160,7 @@ player2roll = () => {
   }
 }
 
-tiebreaker = () => {
+const tiebreaker = () => {
   const player_1extra = Math.floor(Math.random() * 6) + 1;
   const player_2extra = Math.floor(Math.random() * 6) + 1;
   alert("Tiebreaker!");
@@ -165,7 +202,7 @@ tiebreaker = () => {
   }
 }
 
-extraroll = (turn) => {
+const extraroll = (turn) => {
   player_1extra = Math.floor(Math.random() * 6) + 1;
   player_2extra = Math.floor(Math.random() * 6) + 1;
   if (turn === 1) {
@@ -183,18 +220,14 @@ extraroll = (turn) => {
   }
 }
 
-let player1turns = 1;
-let player2turns = 1;
-let currentround = 1;
-
-roundcheck = () => {
+const roundcheck = () => {
   if (player1turns === player2turns) {
     currentround++;
     roundd.innerHTML = "Round " + currentround;
   }
 }
 
-roll = () => {
+const roll = () => {
   
   if (currentround === 5 && player1score === player2score) {
     result.innerHTML = 'Tiebreaker!';
@@ -205,19 +238,23 @@ roll = () => {
     p_1.transition="all 0.5s";
     p_2.style.color="white";
     p_2.transition = "all 0.5s";
+    winnerp1 = true;
     p_1.innerHTML = "Player 1: " + player1score + " total points";
+    sessionStorage.setItem("p1score", player1score);
     alert("Player 1 wins!");
-    window.location.replace("leaderboard.html");
+    window.location.replace("mainsub.html");
   } else if (currentround === 5 && (player1score < player2score)) {
     result.innerHTML = 'Player 2 wins!';
     p_2.style.color="#9C060C";
     p_2.transition="all 0.5s";
     p_1.style.color="white";
     p_1.transition = "all 0.5s";
+    winnerp2 = true;
     p_2.innerHTML = "Player 2: " + player2score + " total points";
+    sessionStorage.setItem("p2score", player2score);
     alert("Player 2 wins!");
-    window.location.replace("leaderboard.html");
-  }else if (player1turn === true && player2turn === false) {
+    window.location.replace("mainsubmit.html");
+  } else if (player1turn === true && player2turn === false) {
     player1roll();
     p_1.style.color="#9C060C";
     p_1.transition="all 0.5s";
@@ -238,40 +275,5 @@ roll = () => {
     player2turn = false;
     roundcheck();
   }
-
 }
 
-
-//Leaderboard code
-//Firebase code
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyC9Z0mwHgIFizO5EPtCA31_2pL44FyXesI",
-  authDomain: "comp-sci-gcse-dice-game.firebaseapp.com",
-  projectId: "comp-sci-gcse-dice-game",
-  storageBucket: "comp-sci-gcse-dice-game.appspot.com",
-  messagingSenderId: "289504905992",
-  appId: "1:289504905992:web:e499d49774ab6b988f7abd",
-  measurementId: "G-4GP3VGB5DG"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-let database = firebase.database();
-let ref = database.ref('scores');
-
-let data = {
-  name: "",
-  score: ""
-}
-
-ref.push(data);
