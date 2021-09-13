@@ -17,7 +17,7 @@ $(document).ready(() => {
 })
 
 let player1_attempts = 2;
-
+//Login Validation for the first player
 $(validate1 = form => {
   if (player1_attempts === 0) {
     window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
@@ -36,7 +36,7 @@ $(validate1 = form => {
 });
   
 let player2_attempts = 2;
-
+//Login Validation for the second player
 $(validate2 = form => {
   if (player2_attempts === 0) {
     window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
@@ -54,40 +54,50 @@ $(validate2 = form => {
   return true;
 });
 
-
+//Creates array in local storage
 const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 const MAX_HIGH_SCORES = 5;
 
+//Submits the winner's name and submits their name and their score from sessionStorage to localStorage
 $(detailSubmit1 = form => {
   if (form.winner.value !== "") {
+    //Form can't be empty
     const score = {
       name: form.winner.value,
       score: sessionStorage.getItem("p1score"),
     };
     highScores.push(score);
+    //pushes score to the local storage
     highScores.sort((a, b) => b.score - a.score);
+    //Sorts out scores from highest to lowest
     highScores.splice(5);
+    //Only 5 players can be stored in the local storage
     localStorage.setItem('highScores', JSON.stringify(highScores));
     window.location.replace("leaderboard.html");
   }
 });
 
+//Submits the winner's name and submits their name and their score from sessionStorage to localStorage
 $(detailSubmit2 = form => {
   if (form.winner.value !== "") {
+    //Form can't be empty
     const score = {
       name: form.winner.value,
       score: sessionStorage.getItem("p2score"),
     };
     highScores.push(score);
+    //Pushes score to local storage
     highScores.sort((a, b) => b.score - a.score);
+    //Sorts out scores from highest to lowest
     highScores.splice(5);
+    //Only 5 players can be stored in the local storage
     localStorage.setItem('highScores', JSON.stringify(highScores));
     window.location.replace("leaderboard.html");
   }
 });
 
+//For the password censor button
 let CensorStatus = false;
-
 const Censor = () => {
   if (CensorStatus) {
     document.getElementById("password").setAttribute("type", "password");
@@ -99,16 +109,18 @@ const Censor = () => {
 }
 
 //Dice Game Code
-
+//Initialising variables
 var player1score = 0;
 var player2score = 0;
+// selects classes and IDs from html and puts them into variables for easier reference
 const result = document.querySelector('.result');
 const p_1=document.querySelector('#p1');
 const p_2=document.querySelector('#p2');
-const roundd=document.querySelector('#round');
+const roundd = document.querySelector('#round');
+//sets text
 result.innerHTML='Get Ready';
 roundd.innerHTML = 'Round 1';
-
+//p1 starts first, very fair
 let player1turn = true;
 let player2turn = false;
 let player_1total = 0;
@@ -119,6 +131,7 @@ let currentround = 1;
 var winnerp1 = false;
 var winnerp2 = false;
 
+//sets dices for player1's turn and changes mostly html elements
 const player1roll = () => {
   const player_1 = Math.floor(Math.random() * 6) + 1;
   const player_12 = Math.floor(Math.random() * 6) + 1;
@@ -131,6 +144,7 @@ const player1roll = () => {
   } else if ((player_1total % 2) !== 0) {
     player1score -= 5;
     player1score = player1score < 0 ? 0 : player1score;
+    //Prevents value from going below 0
     p_1.innerHTML = "Player 1: " + player1score + " total points";
     document.getElementById("rollresult").innerHTML = "Odd Total! -5 points!";
   } else if ((player_1total % 2) === 0) {
@@ -139,6 +153,8 @@ const player1roll = () => {
     document.getElementById("rollresult").innerHTML = "Even Total! +10 extra points!";
   }
 }
+
+//sets dices for player2's turn and changes mostly html elements
 const player2roll = () => {
   const player_2 = Math.floor(Math.random() * 6) + 1;
   const player_22 = Math.floor(Math.random() * 6) + 1;
@@ -151,6 +167,7 @@ const player2roll = () => {
   } else if ((player_2total % 2) !== 0) {
     player2score -= 5;
     player2score = player2score < 0 ? 0 : player2score;
+    //Prevents value from going below 0
     document.getElementById("rollresult").innerHTML = "Odd Total! -5 points!";
     p_2.innerHTML = "Player 2: " + player2score + " total points";
   } else if ((player_2total % 2) === 0) {
@@ -160,6 +177,7 @@ const player2roll = () => {
   }
 }
 
+//In case there is a draw. This has never happened for me though. Could not test if it works. Or maybe it doesn't work?
 const tiebreaker = () => {
   const player_1extra = Math.floor(Math.random() * 6) + 1;
   const player_2extra = Math.floor(Math.random() * 6) + 1;
@@ -202,6 +220,7 @@ const tiebreaker = () => {
   }
 }
 
+//An extra roll!
 const extraroll = (turn) => {
   player_1extra = Math.floor(Math.random() * 6) + 1;
   player_2extra = Math.floor(Math.random() * 6) + 1;
@@ -220,6 +239,7 @@ const extraroll = (turn) => {
   }
 }
 
+//increments the round
 const roundcheck = () => {
   if (player1turns === player2turns) {
     currentround++;
@@ -227,11 +247,13 @@ const roundcheck = () => {
   }
 }
 
+//On click in html, this code is executed
 const roll = () => {
-  
+  //Tiebreaker initiated at the end of 5 rounds
   if (currentround === 5 && player1score === player2score) {
     result.innerHTML = 'Tiebreaker!';
     tiebreaker();
+    //If Player1 has a higher score after 5 rounds
   } else if (currentround === 5 && (player1score > player2score)) {
     result.innerHTML = 'Player 1 wins!';
     p_1.style.color="#9C060C";
@@ -243,6 +265,7 @@ const roll = () => {
     sessionStorage.setItem("p1score", player1score);
     alert("Player 1 wins!");
     window.location.replace("mainsub.html");
+    //If Player2 has a higher score after 5 rounds
   } else if (currentround === 5 && (player1score < player2score)) {
     result.innerHTML = 'Player 2 wins!';
     p_2.style.color="#9C060C";
@@ -254,6 +277,7 @@ const roll = () => {
     sessionStorage.setItem("p2score", player2score);
     alert("Player 2 wins!");
     window.location.replace("mainsubmit.html");
+    //Alternates player turns between p1 and p2
   } else if (player1turn === true && player2turn === false) {
     player1roll();
     p_1.style.color="#9C060C";
